@@ -94,10 +94,8 @@ try:
 			
 			
 			if Resp.find("200 OK") > 0:
-				while true:
-					chunk += sock.recv()
+				
 				print Resp
-				time.sleep(50) 
 				file=open("test.html","w")
 				file.write(Resp)
 				file.close()
